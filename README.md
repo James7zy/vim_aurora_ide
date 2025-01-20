@@ -71,27 +71,17 @@
 
 开始前，我假设你：0）具备基本的 vim 操作能力，清楚如何打开/编辑/保存文档、命令与插入模式间切换；1）希望将 vim 打造成 C/C++ 语言的 IDE，而非其他语言。
 
-关于 vim 的优点，你在网上能查到 128+ 项，对我而言，只有两项：0）所思即所得，让手输入的速度跟上大脑思考的速度，1）所需即所获，只有你想不到的功能、没有实现不了的插件。希望获得前者的能力，你需要两本教程深入学习，《Practical Vim: Edit Text at the Speed of Thought》和《vim user manual》；要想拥有后者的能力，通读本文 -。-#。对于 vim 的喜爱，献上湿哥哥以表景仰之情：
-<div align="center">
-vi 之大道如我心之禅，<br />
-  vi 之漫路即为禅修，<br /> 
-  vi 之命令禅印于心，<br />
- 未得此道者视之怪诞，<br />
- 与之为伴者洞其真谛，<br />
- 长修此道者巨变人生。<br />
-</div>
-<div align="right">
-</div><br />  
+关于 vim 的优点，你在网上能查到 128+ 项，对我而言，只有两项：0）所思即所得，让手输入的速度跟上大脑思考的速度，1）所需即所获，只有你想不到的功能、没有实现不了的插件。希望获得前者的能力，你需要两本教程深入学习，《Practical Vim: Edit Text at the Speed of Thought》和《vim user manual》；要想拥有后者的能力。
 
 言归正传，说说 vim 用于代码编写提供了哪些直接和间接功能支撑。vim 用户手册中，50％ 的例子都是在讲 vim 如何高效编写代码，由此可见，vim 是一款面向于程序员的编辑器，即使某些功能 vim 无法直接完成，借助其丰富的插件资源，必定可以达成目标，这就是所需即所获。
 
 我是个目标驱动的信奉者，本文内容，我会先给出优秀 C/C++ IDE 应具备哪些功能，再去探索如何通过 vim 的操作或插件来达到目标。最终至少要像这个样子：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9B%BE%E5%BD%A2%E7%8E%AF%E5%A2%83%E4%B8%8B%20IDE%20%E6%80%BB%E6%8F%BD.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%9B%BE%E5%BD%A2%E7%8E%AF%E5%A2%83%E4%B8%8B%20IDE%20%E6%80%BB%E6%8F%BD.png" alt=""/><br />
 （图形环境下 IDE 总揽）
 </div>
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E7%BA%AF%E5%AD%97%E7%AC%A6%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%80%BB%E8%A7%88.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E7%BA%AF%E5%AD%97%E7%AC%A6%E6%A8%A1%E5%BC%8F%E4%B8%8B%E6%80%BB%E8%A7%88.png" alt=""/><br />
 （纯字符模式下 IDE 总揽）
 </div>
 
@@ -162,7 +152,7 @@ autocmd BufWritePost $MYVIMRC source $MYVIMRC
 ```
 比如，我可以随时切换配色方案：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4%E7%AB%8B%E5%8D%B3%E7%94%9F%E6%95%88.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E9%85%8D%E7%BD%AE%E5%8F%98%E6%9B%B4%E7%AB%8B%E5%8D%B3%E7%94%9F%E6%95%88.gif" alt=""/><br />
 （配置变更立即生效）
 </div>
 
@@ -202,11 +192,23 @@ vim someplugin.vba
 ```
 git clone git@github.com:vim/vim.git
 cd vim/
-./configure --with-features=huge --enable-pythoninterp --enable-rubyinterp --enable-luainterp --enable-perlinterp --with-python-config-dir=/usr/lib/python2.7/config/ --enable-gui=gtk2 --enable-cscope --prefix=/usr
+./configure --with-features=huge \
+            --enable-multibyte \
+            --enable-python3interp \
+            --enable-pythoninterp \
+            --with-python3-config-dir=$(python3-config --configdir) \
+            --enable-gui=gtk2 \
+            --enable-cscope \
+            --enable-rubyinterp \
+            --enable-luainterp \
+            --enable-perlinterp \
+            --prefix=/usr/
 make
 make install
 ```
-其中，--enable-pythoninterp、--enable-rubyinterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成采用 GNOME2 风格的 gvim，--enable-cscope 支持 cscope，--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、lua-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel、ncurses-devel，如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。构建完成后在 vim 中执行
+其中，--enable-pythoninterp、--enable-rubyinterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，--enable-gui=gtk2 表示生成采用 GNOME2 风格的 gvim，--enable-cscope 支持 cscope，
+--with-python3-config-dir=$(python3-config --configdir) \指定 python 路径（先自行安装 python 的头文件 python-devel），这几个特性非常重要，影响后面各类插件的使用。注意，
+你得预先安装相关依赖库的头文件，python-devel、python3-devel、ruby-devel、lua-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel、ncurses-devel，如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。构建完成后在 vim 中执行
 
 ```
 :echo has('python')
@@ -224,10 +226,11 @@ vim 自身希望通过在 .vim/ 目录中预定义子目录管理所有插件（
 
 我希望每个插件在 .vim/ 下都有各自独立子目录，这样需要升级、卸载插件时，直接找到对应插件目录变更即可；另外，我希望所有插件清单能在某个配置文件中集中罗列，通过某种机制实现批量自动安装/更新/升级所有插件。vundle（https://github.com/VundleVim/Vundle.vim ）为此而生，它让管理插件变得更清晰、智能。
 
-vundle 会接管 .vim/ 下的所有原生目录，所以先清空该目录，再通过如下命令安装 vundle：
+plugin会接管 .vim/ 下的所有原生目录，所以先清空该目录，再通过如下命令安装：
 
 ```
-git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 ```
 接下来在 .vimrc 增加相关配置信息：
 
@@ -290,7 +293,7 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 ```
 当前，.vim/ 为空，当我在 vim 中执行 :PluginInstall 时，整个自动安装过程便开始了：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/vundle%20%E6%89%B9%E9%87%8F%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/vundle%20%E6%89%B9%E9%87%8F%E5%AE%89%E8%A3%85%E6%8F%92%E4%BB%B6.gif" alt=""/><br />
 （vundle 批量安装插件）
 </div>
 要卸载插件，先在 .vimrc 中注释或者删除对应插件配置信息，然后在 vim 中执行
@@ -313,7 +316,7 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 
 玉不琢不成器，vim 不配不算美。刚安装好的 vim 朴素得吓人，这是与我同时代的软件么？
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E9%BB%98%E8%AE%A4%20vim%20%E7%95%8C%E9%9D%A2.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E9%BB%98%E8%AE%A4%20vim%20%E7%95%8C%E9%9D%A2.png" alt=""/><br />
 （默认 vim 界面）
 </div>
 就我的审美观而言，至少有几个问题：语法高亮太单薄、主题风格太简陋、窗口元素太冗余、辅助信息太欠缺。
@@ -336,7 +339,7 @@ colorscheme solarized
 ```
 其中，不同主题都有暗/亮色系之分，这样三种主题六种风格，久不久换一换，给你不一样的心情：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/solarized%20%E4%B8%BB%E9%A2%98%E9%A3%8E%E6%A0%BC.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/solarized%20%E4%B8%BB%E9%A2%98%E9%A3%8E%E6%A0%BC.png" alt=""/><br />
 （solarized 主题风格）
 </div>
 
@@ -359,7 +362,7 @@ set guioptions-=T
 
 重启 vim 后效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%8E%BB%E9%99%A4%E5%86%97%E4%BD%99%E7%AA%97%E5%8F%A3%E5%85%83%E7%B4%A0.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%8E%BB%E9%99%A4%E5%86%97%E4%BD%99%E7%AA%97%E5%8F%A3%E5%85%83%E7%B4%A0.png" alt=""/><br />
 （去除冗余窗口元素）
 </div>
 
@@ -397,7 +400,7 @@ set hlsearch
 
 效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%B7%BB%E5%8A%A0%E8%BE%85%E5%8A%A9%E4%BF%A1%E6%81%AF.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E6%B7%BB%E5%8A%A0%E8%BE%85%E5%8A%A9%E4%BF%A1%E6%81%AF.png" alt=""/><br />
 （添加辅助信息）
 </div>
 
@@ -427,7 +430,7 @@ let g:Powerline_colorscheme='solarized256'
 
 效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E7%95%8C%E9%9D%A2%E7%BE%8E%E5%8C%96%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E7%95%8C%E9%9D%A2%E7%BE%8E%E5%8C%96%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C.png" alt=""/><br />
 （界面美化最终效果）
 </div>
 图中，中英文混合字体看着是不是很舒服哈；增强后的状态栏，不仅界面漂亮多了，而且多了好些辅助信息（所在函数名、文件编码格式、文件类型）。
@@ -448,12 +451,12 @@ syntax on
 ```
 效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE.png" alt=""/><br />
 （语法高亮）
 </div>
 上图中 STL 容器模板类 unordered\_multimap 并未高亮，对滴，vim 对 C++ 语法高亮支持不够好（特别是 C++11/14 新增元素），必须借由插件 vim-cpp-enhanced-highlight（https://github.com/octol/vim-cpp-enhanced-highlight ）进行增强。效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%A2%9E%E5%BC%BA%20C%2B%2B11%20%E5%8F%8A%20STL%20%E7%9A%84%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%A2%9E%E5%BC%BA%20C%2B%2B11%20%E5%8F%8A%20STL%20%E7%9A%84%E8%AF%AD%E6%B3%95%E9%AB%98%E4%BA%AE.png" alt=""/><br />
 （增强 C++11 及 STL 的语法高亮）
 </div>
 vim-cpp-enhanced-highlight 主要通过 .vim/bundle/vim-cpp-enhanced-highlight/after/syntax/cpp.vim 控制高亮关键字及规则，所以，当你发现某个 STL 容器类型未高亮，那么将该类型追加进 cpp.vim 即可。如，initializer_list 默认并不会高亮，需要添加
@@ -490,7 +493,7 @@ set softtabstop=4
 
 很多编码规范建议缩进（代码嵌套类似）最多不能超过 4 层，但难免有更多层的情况，缩进一多，我那个晕啊：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%A4%9A%E5%B1%82%E7%BC%A9%E8%BF%9B.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%A4%9A%E5%B1%82%E7%BC%A9%E8%BF%9B.png" alt=""/><br />
 （多层缩进）
 </div>
 
@@ -509,12 +512,12 @@ let g:indent_guides_guide_size=1
 
 重启 vim 效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%8D%E8%BF%9E%E7%BB%AD%E7%9A%84%E7%BC%A9%E8%BF%9B%E5%8F%AF%E8%A7%86%E5%8C%96.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E4%B8%8D%E8%BF%9E%E7%BB%AD%E7%9A%84%E7%BC%A9%E8%BF%9B%E5%8F%AF%E8%A7%86%E5%8C%96.png" alt=""/><br />
 （不连续的缩进可视化）
 </div>
 断节？Indent Guides 通过识别制表符来绘制缩进连接线，断节处是空行，没有制表符，自然绘制不出来，算是个小 bug，但瑕不掩瑜，有个小技巧可以解决，换行-空格-退格：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%AE%8C%E7%BE%8E%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BC%A9%E8%BF%9B.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%AE%8C%E7%BE%8E%E5%8F%AF%E8%A7%86%E5%8C%96%E7%BC%A9%E8%BF%9B.png" alt=""/><br />
 （完美可视化缩进）
 </div>
 
@@ -532,7 +535,7 @@ set nofoldenable
 
 操作：za，打开或关闭当前折叠；zM，关闭所有折叠；zR，打开所有折叠。效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%BB%A3%E7%A0%81%E6%8A%98%E5%8F%A0.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E4%BB%A3%E7%A0%81%E6%8A%98%E5%8F%A0.gif" alt=""/><br />
 （代码折叠）
 </div>
 
@@ -548,7 +551,7 @@ nmap <silent> <Leader>sw :FSHere<cr>
 ```
 这样，键入 ;sw 就能在实现文件和接口文件间切换。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%8E%A5%E5%8F%A3%E6%96%87%E4%BB%B6%E4%B8%8E%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E5%88%87%E6%8D%A2.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E6%8E%A5%E5%8F%A3%E6%96%87%E4%BB%B6%E4%B8%8E%E5%AE%9E%E7%8E%B0%E6%96%87%E4%BB%B6%E5%88%87%E6%8D%A2.gif" alt=""/><br />
 （接口文件与实现文件切换）
 </div>
 上图中，初始状态先打开了接口文件 MyClass.h，键入 ;sw 后，vim 在新 buffer 中打开实现文件 MyClass.cpp，并在当前窗口中显示；再次键入 ;sw 后，当前窗口切回接口文件。
@@ -565,7 +568,7 @@ vim 书签的使用很简单，在你需要收藏的代码行键入 mm，这样�
 
 vim 的书签分为两类，独立书签和分类书签。独立书签，书签名只能由字母（a-zA-Z）组成，长度最多不超过 2 个字母，并且，同个文件中，不同独立书签名中不能含有相同字母，比如，a 和 bD 可以同时出现在同个文件在，而 Fc 和 c 则不行。分类书签，书签名只能由可打印特殊字符（!@#$%^&\*()）组成，长度只能有 1 个字符，同个文件中，你可以把不同行设置成同名书签，这样，这些行在逻辑上就归类成相同类型的书签了。下图定义了名为 a 和 dF 两个独立书签（分别 259 行和 261 行）、名为 # 的一类分类书签（含 256 行和 264 行）、名为 @ 的一类分类书签（257 行），如下所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E7%8B%AC%E7%AB%8B%E4%B9%A6%E7%AD%BE%E5%92%8C%E5%88%86%E7%B1%BB%E4%B9%A6%E7%AD%BE.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E7%8B%AC%E7%AB%8B%E4%B9%A6%E7%AD%BE%E5%92%8C%E5%88%86%E7%B1%BB%E4%B9%A6%E7%AD%BE.png" alt=""/><br />
 （独立书签和分类书签）
 </div>
 
@@ -607,7 +610,7 @@ let g:SignatureMap = {
 
 效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B9%A6%E7%AD%BE.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%8F%AF%E8%A7%86%E5%8C%96%E4%B9%A6%E7%AD%BE.gif" alt=""/><br />
 （可视化书签）
 </div>
 
@@ -817,7 +820,7 @@ long 将作为 short 的简要描述展示在 vim 的 tagbar 子窗口中；fold
 
 重启 vim 后，打开一个 C/C++ 源码文件，键入 <leader>ilt，将在左侧的 tagbar 窗口中将可看到标签列表：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E6%A0%87%E8%AF%86%E7%AC%A6%E5%88%97%E8%A1%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E6%A0%87%E8%AF%86%E7%AC%A6%E5%88%97%E8%A1%A8.gif" alt=""/><br />
 （基于标签的标识符列表）
 </div>
 从上图可知 tagbar 的几个特点：
@@ -845,7 +848,7 @@ long 将作为 short 的简要描述展示在 vim 的 tagbar 子窗口中；fold
 
 这时，你可以体验下初级的声明/定义跳转功能。把光标移到 main.cpp 的 one.printMsg() 那行的 printMsg 上，键入快捷键 g]，vim 将罗列出名为 printMsg 的所有标签候选列表，按需选择键入编号即可跳转进入。如下图：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BE%85%E9%80%89%E6%A0%87%E7%AD%BE.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%BE%85%E9%80%89%E6%A0%87%E7%AD%BE.png" alt=""/><br />
 （待选标签）
 </div>
 
@@ -861,7 +864,7 @@ nmap <Leader>tp :tprevious<CR>
 ```
 等等，这还不行，vim 中有个叫标签栈（tags stack）的机制，:tnext、:tprevious 只能遍历已经压入标签栈内的标签，所以，你在遍历前需要通过快捷键 ctrl-] 将光标所在单词匹配的所有标签压入标签栈中，然后才能遍历。不说复杂了，以后你只需先键入 ctrl-]，若没跳转至需要的标签，再键入 <leader>tn 往后或者 <leader>tp 往前遍历即可。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E8%B7%B3%E8%BD%AC.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%E8%B7%B3%E8%BD%AC.gif" alt=""/><br />
 （基于标签的跳转）
 </div>
 
@@ -904,7 +907,7 @@ nnoremap <leader>jd :YcmCompleter GoToDefinition<CR>
 ```
 效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E8%AF%AD%E4%B9%89%E7%9A%84%E8%B7%B3%E8%BD%AC.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E8%AF%AD%E4%B9%89%E7%9A%84%E8%B7%B3%E8%BD%AC.gif" alt=""/><br />
 （基于语义的跳转）
 </div>
 
@@ -948,7 +951,7 @@ nnoremap <Leader>sp :CtrlSF<CR>
 
 太性感了，以关键字 CmdlineOption 为例，如下所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%86%85%E5%AE%B9%E6%9F%A5%E6%89%BE.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%86%85%E5%AE%B9%E6%9F%A5%E6%89%BE.gif" alt=""/><br />
 （内容查找）
 </div>
 
@@ -962,7 +965,7 @@ nnoremap <Leader>sp :CtrlSF<CR>
 
 快捷选中 ctrlsf 子窗口中的多个匹配项，关键还是这些匹配项分散在不同行的不同位置，这就需要多光标编辑功能，vim-multiple-cursors 插件（https://github.com/terryma/vim-multiple-cursors ）为此而生。装好 vim-multiple-cursors 后，你随便编辑个文档，随便输入多个相同的字符串，先在可视化模式下选中其中一个，接着键入 ctrl-n，你会发现第二个该字符串也被选中了，持续键入 ctrl-n，你可以选中所有相同的字符串，把这个功能与 ctrlsf 结合，你来感受下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E6%8D%B7%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%BF%AB%E6%8D%B7%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
 （快捷替换）
 </div>
 上图中，我想将 prtHelpInfo() 更名为 showHelpInfo()，先通过 ctrlsf 找到工程中所有 prtHelpInfo，然后直接在 ctrlsf 子窗口中选中第一个 ptr，再通过 vim-multiple-cursors 选中第二个 ptr，接着统一删除 ptr 并统一键入 show，最后保存并重新加载替换后的文件。
@@ -1081,12 +1084,12 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 
 比如，我将工程的所有 *.cpp 和 *.h 中的关键字 MyClassA 按不确认且整词匹配模式替换成 MyClass，所以注释中的关键字不会被替换掉。如下所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%8D%E7%A1%AE%E8%AE%A4%E4%B8%94%E6%95%B4%E8%AF%8D%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E4%B8%8D%E7%A1%AE%E8%AE%A4%E4%B8%94%E6%95%B4%E8%AF%8D%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
 （不确认且整词匹配模式的替换）
 </div>
 又比如，对当前文件采用需确认且无须整词匹配的模式进行替换，你会看到注释中的关键字也被替换了：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E7%A1%AE%E8%AE%A4%E4%B8%94%E6%97%A0%E9%A1%BB%E6%95%B4%E8%AF%8D%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E7%A1%AE%E8%AE%A4%E4%B8%94%E6%97%A0%E9%A1%BB%E6%95%B4%E8%AF%8D%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F%E7%9A%84%E6%9B%BF%E6%8D%A2.gif" alt=""/><br />
 （确认且无须整词匹配模式的替换）
 </div>
 
@@ -1106,7 +1109,7 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 
 如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%85%B3%E6%B3%A8%E9%87%8A.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%85%B3%E6%B3%A8%E9%87%8A.gif" alt=""/><br />
 （快速开/关注释）
 </div>
 
@@ -1116,7 +1119,7 @@ nnoremap <Leader>rwc :call Replace(1, 1, input('Replace '.expand('<cword>').' wi
 
 如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/ASCII%20art%20%E9%A3%8E%E6%A0%BC%E6%B3%A8%E9%87%8A.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/ASCII%20art%20%E9%A3%8E%E6%A0%BC%E6%B3%A8%E9%87%8A.png" alt=""/><br />
 （ASCII art 风格注释）
 </div>
 
@@ -1341,7 +1344,7 @@ let g:UltiSnipsJumpBackwardTrigger="<leader><s-tab>"
 
 效果如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%A8%A1%E6%9D%BF%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E6%A8%A1%E6%9D%BF%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
 （模板补全）
 </div>
 
@@ -1395,7 +1398,7 @@ set tags+=/usr/include/c++/4.8/stdcpp.tags
 ```
 后续你就可以进行 C++ 标准库的代码补全，比如，在某个 string 对象名输入 . 时，vim 自动显示成员列表。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%20C%2B%2B%20%E6%A0%87%E5%87%86%E5%BA%93%E8%A1%A5%E5%85%A8.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%9F%BA%E4%BA%8E%E6%A0%87%E7%AD%BE%E7%9A%84%20C%2B%2B%20%E6%A0%87%E5%87%86%E5%BA%93%E8%A1%A5%E5%85%A8.png" alt=""/><br />
 （基于标签的 C++ 标准库补全）
 </div>
 
@@ -1432,7 +1435,7 @@ set tags+=/usr/include/sys.tags
 
 我需要更优的补全机制 —— 基于语义的智能补全。语义补全，实时探测你是否有补全需求，无须你定期生成标签，可解决问题一；语义补全，是借助编译器进行代码分析，只要编译器对 C++ 规范支持度高，不论标准库、类型推导，还是 boost 库中的智能指针都能补全。什么是语义分析补全？看下图：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E8%A1%A5%E5%85%A8.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E8%AF%AD%E4%B9%89%E5%88%86%E6%9E%90%E8%A1%A5%E5%85%A8.png" alt=""/><br />
 （语义分析补全）
 </div>
 代码中定义的 TCandyBar 类型只包括 3 个成员，但 clang_complete 能补全编译器根据 C++ 规范自动添加的两个重载操作符、一个默认构造函数、一个析构函数，这就是基于语义分析的智能补全。
@@ -1614,7 +1617,7 @@ YCM 集成了多种补全引擎：语义补全引擎、标签补全引擎、Omni
 
 YCM 的语义补全。YCM 不会在每次键入事件上触发语义补全，YCM 作者认为这会影响补全效率而且没什么必要（我持保留意见），YCM 只在如下两种场景下触发语义补全：一是补全标识符所在文件必须在 buffer 中（即，文件已打开）；一是在对象后键入 .、指针后键入 ->、名字空间后键入 ::。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM%20%E7%9A%84%E8%AF%AD%E4%B9%89%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/YCM%20%E7%9A%84%E8%AF%AD%E4%B9%89%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
 （YCM 的语义补全）
 </div>
 上图中，我先尝试补全类 MyClass 失败，接着我把 MyClass 所在的文件 MyClass.h 打开后切回 main.cpp 再次补全类 MyClass 成功，然后在对象 mc 后键入 . 进行成员补全；
@@ -1629,7 +1632,7 @@ set tags+=/data/misc/software/misc./vim/stdcpp.tags
 ```
 其中，工程自身代码的标签可借助 indexer 插件自动生成自动引入，但由于 YCM 要求 tag 文件中必须含有 language:\<X> 字段（ctags 的命令行参数 --fields 必须含有 l 选项），所有必须通过 indexer_ctagsCommandLineOptions 告知 indexer 调用 ctags 时注意生成该字段，具体设置参见“代码导航”章节；前面章节介绍过如何生成、引入 C++ 标准库的 tag 文件，设置成正确路径即可。另外，由于引入过多 tag 文件会导致 vim 变得非常缓慢，我的经验是，只引入工程自身（indexer 自动引入）和 C++ 标准库的标签（上面配置的最后一行）。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM%20%E7%9A%84%E6%A0%87%E7%AD%BE%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/YCM%20%E7%9A%84%E6%A0%87%E7%AD%BE%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
 （YCM 的标签补全）
 </div>
 
@@ -1640,18 +1643,18 @@ inoremap <leader>; <C-x><C-o>
 ```
 比如，我要补全 fork()，该函数所在头文件为 unistd.h，正确添加 #include \<unistd.h> 后即可补全。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM_%E7%9A%84_OmniCppComplete%20%E8%A1%A5%E5%85%A8%E5%BC%95%E6%93%8E.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/YCM_%E7%9A%84_OmniCppComplete%20%E8%A1%A5%E5%85%A8%E5%BC%95%E6%93%8E.gif" alt=""/><br />
 （YCM 的 OmniCppComplete 补全引擎）
 </div>
 其实，只要你正确插入头文件，YCM 的 OmniCppComplete 补全引擎可以替代语义引擎和标签引擎，比如，上面的 MyClass 在不打开 MyClass.h 情况下也可由OmniCppComplete（键入 \<leader>;）补全：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/OmniCppComplete%20%E6%9B%BF%E4%BB%A3%E8%AF%AD%E4%B9%89%E3%80%81%E6%A0%87%E7%AD%BE%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/OmniCppComplete%20%E6%9B%BF%E4%BB%A3%E8%AF%AD%E4%B9%89%E3%80%81%E6%A0%87%E7%AD%BE%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
 （OmniCppComplete 替代语义、标签补全）
 </div>
 
 YCM 的其他补全。YCM 还集成了其他辅助补全引擎，可以补全路径、头文件、甚至可以在注释中继续补全。如下图：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM%20%E7%9A%84%E5%85%B6%E4%BB%96%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/YCM%20%E7%9A%84%E5%85%B6%E4%BB%96%E8%A1%A5%E5%85%A8.gif" alt=""/><br />
 （YCM 的其他补全）
 </div>
 
@@ -1659,12 +1662,12 @@ YCM 的其他补全。YCM 还集成了其他辅助补全引擎，可以补全路
 
 另外，YCM 不愧是 google 工程师开发的，它的匹配项搜索方式非常智能，你无须从前往后逐一输入，YCM 会对你输入的内容进行模糊搜索，如下：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM%20%E6%A8%A1%E7%B3%8A%E6%90%9C%E7%B4%A2.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/YCM%20%E6%A8%A1%E7%B3%8A%E6%90%9C%E7%B4%A2.gif" alt=""/><br />
 （YCM 模糊搜索）
 </div>
 此外，YCM 对大小写也非常智能，当你输入全小写时 YCM 对大小写不敏感，当然输入中有大写字母时 YCM 对大小写敏感：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/YCM%20%E5%A4%A7%E5%B0%8F%E5%86%99%E6%99%BA%E8%83%BD%E6%95%8F%E6%84%9F.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/YCM%20%E5%A4%A7%E5%B0%8F%E5%86%99%E6%99%BA%E8%83%BD%E6%95%8F%E6%84%9F.gif" alt=""/><br />
 （YCM 大小写智能敏感）
 </div>
 上图中，当我键入 tia 时这两个对象均匹配，接着输入大写 L 时就只剩  This_Is_A_Long_Name 匹配。
@@ -1706,7 +1709,7 @@ class MyClass
 ```
 在 MyClass.cpp 中生成成员函数的实现框架，如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%8E%A5%E5%8F%A3%E7%94%9F%E6%88%90%E5%AE%9E%E7%8E%B0.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E6%8E%A5%E5%8F%A3%E7%94%9F%E6%88%90%E5%AE%9E%E7%8E%B0.gif" alt=""/><br />
 （接口生成实现）
 </div>
 MyClass.cpp 中我键入 protodef 定义的快捷键 \<leader>PP，自动生成了函数框架。
@@ -1752,7 +1755,7 @@ nmap <Leader>man :Man 3 <cword><CR>
 ```
 需要查看时，在 vim 中键入输入 :Man fork 或者 :Man std::vector （注意大小写）即可在新建分割子窗口中查看到函数参考信息，为了方便，我设定了快捷键 \<Leader>man，这样，光标所在单词将被传递给 :Man 命令，不用再手工键入，如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BA%93%E4%BF%A1%E6%81%AF%E5%8F%82%E8%80%83.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%BA%93%E4%BF%A1%E6%81%AF%E5%8F%82%E8%80%83.gif" alt=""/><br />
 （库信息参考）
 </div>
 
@@ -1792,7 +1795,7 @@ let NERDTreeAutoDeleteBuffer=1
 
 常用操作：回车，打开选中文件；r，刷新工程目录文件列表；I（大写），显示/隐藏隐藏文件；m，出现创建/删除/剪切/拷贝操作列表。键入 \<leader>fl 后，右边子窗口为工程项目文件列表，如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%96%87%E4%BB%B6%E5%88%97%E8%A1%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E6%96%87%E4%BB%B6%E5%88%97%E8%A1%A8.gif" alt=""/><br />
 （工程文件浏览）
 </div>
 
@@ -1802,7 +1805,7 @@ vim 的多文档编辑涉及三个概念：buffer、window、tab，这三个事�
 
 vim 中每打开一个文件，vim 就对应创建一个 buffer，多个文件就有多个 buffer，但默认你只看得到最后 buffer 对应的 window，通过插件 MiniBufExplorer（https://github.com/fholgado/minibufexpl.vim ，原始版本已停止更新且问题较多，该版本是其他人 fork 的新项目）可以把所有 buffer 罗列出来，并且可以显示多个 buffer 对应的 window。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/buffer%20%E5%88%97%E8%A1%A8.png" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/buffer%20%E5%88%97%E8%A1%A8.png" alt=""/><br />
 （buffer 列表）
 </div>
 我在 vim 中打开了 main.cpp、CMakeLists.txt、MyClass.cpp、MyClass.h 这四个文件，最上面子窗口（buffer 列表）罗列出的 [1:main.cpp][4:CMakeLists.txt][5:MyClass.cpp][6:MyClass.h] 就是对应的四个 buffer。当前显示了 main.cpp 和 MyClass.h 的两个 buffer，分别对应绿色区域和橙色区域的 window，这下对 buffer 和 window 有概念了吧。图中关于 buffer 列表再说明两点：
@@ -1822,13 +1825,13 @@ map <C-S-Tab> :MBEbp<cr>
 
 操作：一般通过 NERDtree 查看工程文件列表，选择打开多个代码文件后，MiniBufExplorer 在顶部自动创建 buffer 列表子窗口。通过前面配置，ctrl-tab 正向遍历 buffer，ctrl-shift-tab 逆向遍历（光标必须在 buffer 列表子窗口外）；在某个 buffer 上键入 d 删除光标所在的 buffer（光标必须在 buffer 列表子窗口内）：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%A4%9A%E6%96%87%E6%A1%A3%E7%BC%96%E8%BE%91.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%A4%9A%E6%96%87%E6%A1%A3%E7%BC%96%E8%BE%91.gif" alt=""/><br />
 （多文档编辑）
 </div>
 
 默认时，打开的 window 占据几乎整个 vim 编辑区域，如果你想把多个 window 平铺成多个子窗口可以使用 MiniBufExplorer 的 s 和 v 命令：在某个 buffer 上键入 s 将该 buffer 对应 window 与先前 window 上下排列，键入 v 则左右排列（光标必须在 buffer 列表子窗口内）。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%9C%A8%E5%AD%90%E7%AA%97%E5%8F%A3%E4%B8%AD%E7%BC%96%E8%BE%91%E5%A4%9A%E6%96%87%E6%A1%A3.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%9C%A8%E5%AD%90%E7%AA%97%E5%8F%A3%E4%B8%AD%E7%BC%96%E8%BE%91%E5%A4%9A%E6%96%87%E6%A1%A3.gif" alt=""/><br />
 （在子窗口中编辑多文档）
 </div>
 图中，通过 vim 自身的 f 名字查找 buffer 序号可快速选择需要的 buffer。另外，编辑单个文档时，不会出现 buffer 列表。
@@ -2105,7 +2108,7 @@ nmap <Leader>m :wa<CR>:make<CR><CR>:cw<CR>
 ```
 分解说明下，m 为设定的一键编译快捷键，:wa\<CR> 保存所有调整文档内容，:make\<CR> 调用 make 命令，后面的 \<CR> 消除执行完 make 命令屏幕上“Press ENTER or type command to continue”的输入等待提示，:cw\<CR> 显示 quickfix（仅当有编译错误或警告时）。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E4%B8%80%E9%94%AE%E7%BC%96%E8%AF%91.gif" alt=""/><br />
 （一键编译）
 </div>
 我新建了一个工程，编辑好 CMakeLists.txt，执行 :!cmake CMakeLists.txt，接着 \<leader>m 一键编译，quickfix 窗口显示了编译错误，光标自动定位到需要你解决的第一个编译错误，回车后光标自动调整到该错误对应的代码位置，修正后重新 \<leader>r，编译通过并运行生成的程序。
@@ -2146,7 +2149,7 @@ YCM 的整个静态分析过程分为如下几步：
 
 如下所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E9%9D%99%E6%80%81%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90.gif" alt=""/><br />
 （静态代码分析）
 </div>
 
@@ -2173,13 +2176,13 @@ endsnippet
 ```
 这样，UltiSnips 只管光标前 1 个字符是否是 b，若是则补全 ()，不论 b 前是否有其他字符。类似，其他结对符模板都按此加上 i 控制参数。结对符模板完整定义参见上一节 cpp.snippets 示例。如下是几个快速输入结对符的演示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E8%BE%93%E5%85%A5%E7%BB%93%E5%AF%B9%E7%AC%A6.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E8%BE%93%E5%85%A5%E7%BB%93%E5%AF%B9%E7%AC%A6.gif" alt=""/><br />
 （快速输入结对符）
 </div>
 
 另外，要想高效编辑结对符，你得了解 vim 自身的某些快捷键。比如，有如下字符串且光标在该字符串的任意字符上，这时在命令模式下键入 va) 后将选中包括括号在内的整个字符串：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BB%93%E5%AF%B9%E7%AC%A6.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BB%93%E5%AF%B9%E7%AC%A6.gif" alt=""/><br />
 （快速选中结对符）
 </div>
 其中，v 是动作、a 是范围、) 是结对符。结对符命令的动作包括：选中 v、复制 y、删除 d、删除后插入 c；结对符命令的范围包括：含结对符 a、不含结对符 i。针对不同结对符，组合不同动作和范围就有 4\*2 种方式。比如，di{ 删除不含结对符 {} 的字符串，va\[ 将选中含结对符 [] 内的所有字符。
@@ -2197,7 +2200,7 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "i>", "ip"]
 ```
 这样，在 vim 的命令模式下，一次空格选中最近一层结对符内的文本，两次则选中近两层内的文本，三次三层，依此类推；或者键入 3space，直接选中三层内的文本；若要取消，键入 shift-space 即可。另外，结对符类型也可以在 wildfire_objects 变量中指定。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BB%93%E5%AF%B9%E7%AC%A6%E6%96%87%E6%9C%AC.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E9%80%89%E4%B8%AD%E7%BB%93%E5%AF%B9%E7%AC%A6%E6%96%87%E6%9C%AC.gif" alt=""/><br />
 （快速选中结对符文本）
 </div>
 
@@ -2207,7 +2210,7 @@ undo，编辑器世界中的后悔药，让你有机会撤销最近一步或多�
 
 还是前面的例子，分三步依次输入完 ABC 后，一次 undo 变成 AB，这时，输入 D，之后，无论你多少次 undo 都不可能再找回 C，究其原因，D 是彻底覆盖了 C，而不是与 C 形成两个分支，如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%8D%E6%94%AF%E6%8C%81%E5%88%86%E6%94%AF%E7%9A%84%20undo.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E4%B8%8D%E6%94%AF%E6%8C%81%E5%88%86%E6%94%AF%E7%9A%84%20undo.gif" alt=""/><br />
 （不支持分支的 undo）
 </div>
 
@@ -2221,7 +2224,7 @@ nnoremap <Leader>ud :GundoToggle<CR>
 ```
 gundo.vim 非常贴心，调用它后，你会在左侧看到一个分割为上下两个区域的子窗口。上半区域以可视化方式显示了整颗 undo 树，同时，用 @ 标识最后一步编辑操作，用序号标识各步编辑操作的先后顺序，用时长显示每步操作距离当前消耗时间。下半区域展示了各个操作间的 diff 信息及其上下文，默认为选中那步操作与前一步操作间的 diff，键入 p 可以查看选中那步操作与最后一步操作（即有 @ 标识的那步）间的 diff，这对于找回多次编辑操作之前的环境非常有用。
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%94%AF%E6%8C%81%E5%88%86%E6%94%AF%E7%9A%84%20undo.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E6%94%AF%E6%8C%81%E5%88%86%E6%94%AF%E7%9A%84%20undo.gif" alt=""/><br />
 （支持分支的 undo）
 </div>
 
@@ -2247,13 +2250,13 @@ vim 有两类快速移动光标的方式：一类是以单词为单位的移动�
 
 easymotion 只做一件事：把满足条件的位置用 [;A~Za~z] 间的标签字符标出来，找到你想去的位置再键入对应标签字符即可快速到达。比如，上面的例子，假设光标在行首，我只需键入 \<leader>\<leader>fa （为避免与其他快捷键冲突，easymotion 采用两次 \<leader> 作为前缀键），所有的字符 a 都被重新标记成 a、b、c、d、e、f 等等标签（原始内容不会改变），f 标签为希望移动去的位置，随即键入 f 即可到达。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8.gif" alt=""/><br />
 （快速移动）
 </div>
 
 类似，前面提过的 w、e、b、ge、F、j、k 等命令在 easymotion 作用下也能实现快速移动，其中，j 和 k 可跨行移动。同时，你还可以搭配 v 选中命令、d 删除命令、y 拷贝命令，比如，v\<leader>\<leader>fa，快速选中光标当前位置到指定字符 a 之间的文本，d\<leader>\<leader>fa，快速删除光标当前位置到指定字符 a 之间的文本，下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E6%90%AD%E9%85%8D%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E7%9A%84%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E6%90%AD%E9%85%8D%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E7%9A%84%E5%BF%AB%E9%80%9F%E7%A7%BB%E5%8A%A8.gif" alt=""/><br />
 （搭配操作命令的快速移动）
 </div>
 
@@ -2265,7 +2268,7 @@ easymotion 只做一件事：把满足条件的位置用 [;A~Za~z] 间的标签�
 
 第二个需求，按照一般逻辑，应该通过 firefox 的某款插件来实现，的确，Markdown Viewer 看起来是干这个事儿的，但它响应速度缓慢、中文显示乱码、无法即时渲染等等问题让我无法接受。网上倒是有些即时渲染 markdown 的网站，比如，https://stackedit.io/editor ，左侧编辑右侧显示，所见即所得，但这又无法让我使用 vim，不行。还是回到 vim 身上想办法，vim-instant-markdown 来了。有了这款 vim 插件，一旦你启用 vim 编辑 markdown 文档，vim-instant-markdown 自动开启 firefox 为你显示 markdown 最终效果，如果你在 vim 中变更了文档内容，vim-instant-markdown 即时渲染、firefox 同步更新，太棒了！
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/markdown%20%E5%8D%B3%E6%97%B6%E6%B8%B2%E6%9F%93.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/markdown%20%E5%8D%B3%E6%97%B6%E6%B8%B2%E6%9F%93.gif" alt=""/><br />
 （markdown 即时渲染）
 </div>
 
@@ -2291,13 +2294,13 @@ npm -g install instant-markdown-d
 
 比如，我在插入模式下依次输入了中文的一二四三，本意是想输入一二三四，下意识地键入 esc 切换为命令模式，键入 x 剪切三，再键入 P 将三粘贴至四前。谁知，在键入 x 时，由于输入法仍保留在先前的中文状态下，导致 vim 的命令模式无法接收到命令，必须得再次键入 shift 切换至英文状态。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E4%B8%AD%E6%96%87%E7%8A%B6%E6%80%81%E8%AE%A9%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E6%97%A0%E6%95%88.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E4%B8%AD%E6%96%87%E7%8A%B6%E6%80%81%E8%AE%A9%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F%E6%97%A0%E6%95%88.gif" alt=""/><br />
 （中文状态让命令模式无效）
 </div>
 
-这很不协调，我希望，在插入模式下输入完中文，切换至命令模式后，即便先前是中文输入状态，也不影响我正常使用命令模式，甚至再次切回插入模式后，能保持先前的输入状态。来了，fcitx.vim（https://github.com/lilydjwg/fcitx.vim ）就是我要的。对，前提是你系统中用的是 fcitx 输入法（为何不用 scim、ibus？https://github.com/yangyangwithgnu/the_new_world_linux#7.4 ）。装好这个插件后，我们再看看刚才的例子，在中文状态下从插入模式切换至命令模式，键入 x、P 调整完四和三顺序后，重新切换至插入模式，输入法状态仍保持中文。如下图所示：
+这很不协调，我希望，在插入模式下输入完中文，切换至命令模式后，即便先前是中文输入状态，也不影响我正常使用命令模式，甚至再次切回插入模式后，能保持先前的输入状态。来了，fcitx.vim（https://github.com/lilydjwg/fcitx.vim ）就是我要的。对，前提是你系统中用的是 fcitx 输入法（为何不用 scim、ibus？https://github.com/James7zy/the_new_world_linux#7.4 ）。装好这个插件后，我们再看看刚才的例子，在中文状态下从插入模式切换至命令模式，键入 x、P 调整完四和三顺序后，重新切换至插入模式，输入法状态仍保持中文。如下图所示：
 <div align="center">
-<img src="https://github.com/yangyangwithgnu/use_vim_as_ide/blob/master/pics/%E5%8D%B3%E4%BE%BF%E4%B8%AD%E6%96%87%E7%8A%B6%E6%80%81%E4%B9%9F%E4%B8%8D%E5%BD%B1%E5%93%8D%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F.gif" alt=""/><br />
+<img src="https://github.com/James7zy/vim_aurora_ide/blob/master/pics/%E5%8D%B3%E4%BE%BF%E4%B8%AD%E6%96%87%E7%8A%B6%E6%80%81%E4%B9%9F%E4%B8%8D%E5%BD%B1%E5%93%8D%E5%91%BD%E4%BB%A4%E6%A8%A1%E5%BC%8F.gif" alt=""/<br />
 （即便中文状态也不影响命令模式）
 </div>
 
