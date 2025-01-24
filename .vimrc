@@ -573,30 +573,31 @@ noremap <leader>fl :LeaderfLine<cr>
 noremap <leader>fw :LeaderfWindow<cr>
 noremap <leader>frr :LeaderfRgRecall<cr>
 
-nmap <unique> <leader>fr <Plug>LeaderfRgPrompt
-nmap <unique> <leader>fra <Plug>LeaderfRgCwordLiteralNoBoundary
-nmap <unique> <leader>frb <Plug>LeaderfRgCwordLiteralBoundary
-nmap <unique> <leader>frc <Plug>LeaderfRgCwordRegexNoBoundary
-nmap <unique> <leader>frd <Plug>LeaderfRgCwordRegexBoundary
+"already auto map with plug
+"nmap <unique> <leader>fr <Plug>LeaderfRgPrompt
+"nmap <unique> <leader>fra <Plug>LeaderfRgCwordLiteralNoBoundary
+"nmap <unique> <leader>frb <Plug>LeaderfRgCwordLiteralBoundary
+"nmap <unique> <leader>frc <Plug>LeaderfRgCwordRegexNoBoundary
+"nmap <unique> <leader>frd <Plug>LeaderfRgCwordRegexBoundary
 
 "vmap <unique> <leader>fra <Plug>LeaderfRgVisualLiteralNoBoundary
 "vmap <unique> <leader>frb <Plug>LeaderfRgVisualLiteralBoundary
 "vmap <unique> <leader>frc <Plug>LeaderfRgVisualRegexNoBoundary
 "vmap <unique> <leader>frd <Plug>LeaderfRgVisualRegexBoundary
 
-nmap <unique> <leader>fgd <Plug>LeaderfGtagsDefinition
-nmap <unique> <leader>fgr <Plug>LeaderfGtagsReference
-nmap <unique> <leader>fgs <Plug>LeaderfGtagsSymbol
-nmap <unique> <leader>fgg <Plug>LeaderfGtagsGrep
+"nmap <unique> <leader>fgd <Plug>LeaderfGtagsDefinition
+"nmap <unique> <leader>fgr <Plug>LeaderfGtagsReference
+"nmap <unique> <leader>fgs <Plug>LeaderfGtagsSymbol
+"nmap <unique> <leader>fgg <Plug>LeaderfGtagsGrep
 
-vmap <unique> <leader>fgd <Plug>LeaderfGtagsDefinition
-vmap <unique> <leader>fgr <Plug>LeaderfGtagsReference
-vmap <unique> <leader>fgs <Plug>LeaderfGtagsSymbol
-vmap <unique> <leader>fgg <Plug>LeaderfGtagsGrep
+"vmap <unique> <leader>fgd <Plug>LeaderfGtagsDefinition
+"vmap <unique> <leader>fgr <Plug>LeaderfGtagsReference
+"vmap <unique> <leader>fgs <Plug>LeaderfGtagsSymbol
+"vmap <unique> <leader>fgg <Plug>LeaderfGtagsGrep
 
-noremap <leader>fgo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
-noremap <leader>fgn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
-noremap <leader>fgp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
+"noremap <leader>fgo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
+"noremap <leader>fgn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
+"noremap <leader>fgp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
 "--------------
 " LeaderF end
 "--------------
