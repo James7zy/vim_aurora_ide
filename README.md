@@ -238,36 +238,32 @@ curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
 " plug in环境设置
 " plug 管理的插件列表必须位于 plug#begin() 和 plug#end() 之间
 
-call plug#begin()
+call plug#begin() 
 Plug 'altercation/vim-colors-solarized'
-Plug 'tomasr/molokai'
-Plug 'vim-scripts/phd'
-Plug 'Lokaltog/vim-powerline'
+Plug 'powerline/powerline'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'derekwyatt/vim-fswitch'
 Plug 'kshenoy/vim-signature'
-Plug 'vim-scripts/BOOKMARKS--Mark-and-Highlight-Full-Lines'
 Plug 'majutsushi/tagbar'
-Plug 'vim-scripts/indexer.tar.gz'
-Plug 'vim-scripts/DfrankUtil'
-Plug 'vim-scripts/vimprj'
-Plug 'dyng/ctrlsf.vim'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdcommenter'
-Plug 'vim-scripts/DrawIt'
+Plug 'honza/vim-snippets'
 Plug 'SirVer/ultisnips'
 Plug 'Valloric/YouCompleteMe'
-Plug 'derekwyatt/vim-protodef'
-Plug 'scrooloose/nerdtree'
 Plug 'fholgado/minibufexpl.vim'
 Plug 'gcmt/wildfire.vim'
 Plug 'sjl/gundo.vim'
-Plug 'Lokaltog/vim-easymotion'
-Plug 'suan/vim-instant-markdown'
-Plug 'lilydjwg/fcitx.vim'
-" 插件列表结束
-call plug#end()
+Plug 'Yggdroot/LeaderF'
+Plug 'junegunn/vim-easy-align'
+Plug 'rhysd/vim-clang-format'
+Plug 'azabiong/vim-highlighter'
+Plug 'justinmk/vim-dirvish'
+Plug 'tpope/vim-unimpaired'
+Plug 'easymotion/vim-easymotion'
+Plug 'skywind3000/vim-preview'
+Plug 'skywind3000/gutentags_plus'
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
 
 filetype plugin indent on
 ```
