@@ -1,4 +1,4 @@
-" 更新时间：2024-10-22 12:15:21
+" 更新时间：2025-01-24 12:15:21
 
 " 定义快捷键的前缀，即 <Leader>
 let mapleader="\<space>"
@@ -74,35 +74,25 @@ set wildmenu
 " >>>>
 " 插件安装
 
-" 环境设置
-"  管理的插件列表必须位于 pulg#begin() 和 plug#end() 之间
-" 使用的是vim plug插件
+" vundle 环境设置
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+" vundle 管理的插件列表必须位于 vundle#begin() 和 vundle#end() 之间
 call plug#begin() 
 Plug 'altercation/vim-colors-solarized'
-Plug 'tomasr/molokai'
-Plug 'vim-scripts/phd'
-Plug 'Lokaltog/vim-powerline'
+Plug 'powerline/powerline'
 Plug 'octol/vim-cpp-enhanced-highlight'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'kshenoy/vim-signature'
-Plug 'vim-scripts/BOOKMARKS--Mark-and-Highlight-Full-Lines'
 Plug 'majutsushi/tagbar'
-Plug 'vim-scripts/indexer.tar.gz'
-Plug 'vim-scripts/DfrankUtil'
-Plug 'vim-scripts/vimprj'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdcommenter'
-Plug 'vim-scripts/DrawIt'
 Plug 'honza/vim-snippets'
 Plug 'SirVer/ultisnips'
 Plug 'Valloric/YouCompleteMe'
-Plug 'derekwyatt/vim-protodef'
-Plug 'scrooloose/nerdtree'
 Plug 'fholgado/minibufexpl.vim'
 Plug 'gcmt/wildfire.vim'
 Plug 'sjl/gundo.vim'
-Plug 'Lokaltog/vim-easymotion'
-Plug 'suan/vim-instant-markdown'
 Plug 'Yggdroot/LeaderF'
 Plug 'junegunn/vim-easy-align'
 Plug 'rhysd/vim-clang-format'
@@ -110,16 +100,10 @@ Plug 'azabiong/vim-highlighter'
 Plug 'justinmk/vim-dirvish'
 Plug 'tpope/vim-unimpaired'
 Plug 'easymotion/vim-easymotion'
-Plug 'skywind3000/quickmenu.vim'
 Plug 'skywind3000/vim-preview'
 Plug 'skywind3000/gutentags_plus'
-Plug 'skywind3000/asyncrun.vim'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-
 " 插件列表结束
 call plug#end()
 filetype plugin indent on
@@ -573,7 +557,7 @@ noremap <leader>fl :LeaderfLine<cr>
 noremap <leader>fw :LeaderfWindow<cr>
 noremap <leader>frr :LeaderfRgRecall<cr>
 
-"already auto map with plug
+" already auto map with plug
 "nmap <unique> <leader>fr <Plug>LeaderfRgPrompt
 "nmap <unique> <leader>fra <Plug>LeaderfRgCwordLiteralNoBoundary
 "nmap <unique> <leader>frb <Plug>LeaderfRgCwordLiteralBoundary
@@ -703,5 +687,8 @@ nmap s <Plug>(easymotion-overwin-f2)
  map  <Leader>w <Plug>(easymotion-bd-w)
  nmap <Leader>w <Plug>(easymotion-overwin-w)
 
-" set backspace
+ "copilot
+let g:copilot_node_path = '/home/ben7zy/.nvm/versions/node/v22.11.0/bin/node'  " 修改为你的 Node.js 路径
+let g:copilot_filetyps = ['c', 'cpp' ]
+
 set backspace=indent,eol,start
