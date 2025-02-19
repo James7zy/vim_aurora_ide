@@ -188,7 +188,9 @@ vim someplugin.vba
 
 <h2 name="1">1 源码安装编辑器 vim</h2>
 
-发行套件的软件源中预编译的 vim 要么不是最新版本，要么功能有阉割，有必要升级成全功能的最新版，当然，源码安装必须滴：
+发行套件的软件源中预编译的 vim 要么不是最新版本，要么功能有阉割，有必要升级成全功能的最新版，当然，源码安装必须的:
+编译需要安装python-dev包括python3,python2:ubuntu使用apt-get install python2.7-dev
+
 ```
 git clone git@github.com:vim/vim.git
 cd vim/
@@ -197,6 +199,7 @@ cd vim/
             --enable-python3interp \
             --enable-pythoninterp \
             --with-python3-config-dir=$(python3-config --configdir) \
+            --with-python-config-dir=$(python2.7-config --configdir) \
             --enable-gui=gtk2 \
             --enable-cscope \
             --enable-rubyinterp \
