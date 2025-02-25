@@ -486,12 +486,6 @@ map <leader>ss :mksession! my.vim<cr>
 "map <leader>rs :source my.vim<cr> :rviminfo my.viminfo<cr>
 map <leader>rs :source my.vim<cr>
 
-" <<
- 
-" 设置快捷键实现一键编译及运行
-nmap <Leader>m :wa<CR> :cd build/<CR> :!rm -rf main<CR> :!cmake CMakeLists.txt<CR>:make<CR><CR> :cw<CR> :cd ..<CR>
-nmap <Leader>g :wa<CR>:cd build/<CR>:!rm -rf main<CR>:!cmake CMakeLists.txt<CR>:make<CR><CR>:cw<CR>:cd ..<CR>:!build/main<CR>
-
 " >>
 " 快速选中结对符内的文本
  
